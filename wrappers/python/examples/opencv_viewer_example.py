@@ -15,7 +15,7 @@ import pyzbar.pyzbar as pyzbar
 pipeline = rs.pipeline()
 config = rs.config()
 config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
-config.enable_stream(rs.stream.color, 1280, 720, rs.format.bgr8, 30)
+config.enable_stream(rs.stream.color, 960, 540, rs.format.bgr8, 60)
 
 # Start streaming
 pipeline.start(config)
@@ -40,20 +40,32 @@ try:
         color_image = np.asanyarray(color_frame.get_data())
         decodedObjects = pyzbar.decode(color_image)
         for barcode in decodedObjects:
-            print("Data", barcode.data)
-            # extract the bounding box location of the barcode and draw
-    		# the bounding box surrounding the barcode on the image
-            (x, y, w, h) = barcode.rect
-            cv2.rectangle(color_image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            points = barcode.polygon
 
-    		# the barcode data is a bytes object so if we want to draw it
+            # If the points do not form a quad, find convex hull
+            if len(points) > 4 :
+              hull = cv2.convexHull(np.array([point for point in points], dtype=np.float32))
+              hull = list(map(tuple, np.squeeze(hull)))
+            else :
+              hull = points;
+
+            # Number of points in the convex hull
+            n = len(hull)
+
+            # Draw the convext hull
+            for j in range(0,n):
+              cv2.line(color_image, hull[j], hull[ (j+1) % n], (0,255,0), 3)
+            print("Data", barcode.data)
+
+    		# The barcode data is a bytes object so if we want to draw it
     		# on our output image we need to convert it to a string first
             barcodeData = barcode.data.decode("utf-8")
             barcodeType = barcode.type
 
-    		# draw the barcode data and barcode type on the image
+    		# Draw the barcode data and barcode type on the image
+            (x, y, w, h) = barcode.rect
             text = "{} ({})".format(barcodeData, barcodeType)
-            cv2.putText(color_image, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 2)
+            cv2.putText(color_image, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
         cv2.imshow("QR Detector Frame", color_image)
 
