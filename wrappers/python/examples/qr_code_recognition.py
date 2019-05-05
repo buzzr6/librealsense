@@ -17,6 +17,8 @@ config = rs.config()
 config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 config.enable_stream(rs.stream.color, 960, 540, rs.format.bgr8, 60)
 
+distance_away = "pending..."
+
 # Start streaming
 profile = pipeline.start(config)
 
@@ -25,6 +27,7 @@ for x in range(5):
   pipeline.wait_for_frames()
 
 try:
+
     while True:
 
         # Wait for a coherent pair of frames: depth and color
@@ -34,8 +37,23 @@ try:
         if not depth_frame or not color_frame:
             continue
 
-        color_image = np.asanyarray(color_frame.get_data())
-        decodedObjects = pyzbar.decode(color_image)
+        color_video = np.asanyarray(color_frame.get_data())
+
+        # Create alignment primitive with color as its target stream:
+        align = rs.align(rs.stream.color)
+        aligned_frames = align.process(frames)
+
+        # Update color and depth frames:
+        aligned_depth_frame = aligned_frames.get_depth_frame()
+        depth = np.asanyarray(aligned_depth_frame.get_data())
+
+        # Get data scale from the device and convert to meters
+        depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
+        depth = depth * depth_scale
+        dist,_,_,_ = cv2.mean(depth)
+        distance_away = str(round(dist, 3)) + ' meters away'
+
+        decodedObjects = pyzbar.decode(color_video)
         for barcode in decodedObjects:
             points = barcode.polygon
 
@@ -51,41 +69,23 @@ try:
 
             # Draw the convext hull
             for j in range(0,n):
-              cv2.line(color_image, hull[j], hull[ (j+1) % n], (0,255,0), 3)
-            # print out data of link to terminal if necessary
-            # print("Data", barcode.data)
+              cv2.line(color_video, hull[j], hull[ (j+1) % n], (0,255,0), 3)
 
     		# The barcode data is a bytes object so if we want to draw it
     		# on our output image we need to convert it to a string first
-            barcodeData = barcode.data.decode("utf-8")
-            barcodeType = barcode.type
+            barcode_data = barcode.data.decode("utf-8")
+            barcode_type = barcode.type
 
-    		# Draw the barcode data and barcode type on the image
+    		# Draw the barcode data and the distance on the video
             (x, y, w, h) = barcode.rect
-            text = "{} ({})".format(barcodeData, barcodeType)
-            cv2.putText(color_image, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            barcode_text = ("{} ({})".format(barcode_data, barcode_type))[:20] + '...'
+            cv2.putText(color_video, barcode_text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+            cv2.putText(color_video, distance_away, (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+            #cv2.putText(color_video, distance_away, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 3)
 
-        # Create alignment primitive with color as its target stream:
-        align = rs.align(rs.stream.color)
-        frameset = align.process(frames)
-
-        cv2.imshow("QR Detector Frame", color_image)
-
-        # Create alignment primitive with color as its target stream:
-        align = rs.align(rs.stream.color)
-        frameset = align.process(frames)
-
-        # Update color and depth frames:
-        aligned_depth_frame = frameset.get_depth_frame()
-        depth = np.asanyarray(aligned_depth_frame.get_data())
-
-        # Get data scale from the device and convert to meters
-        depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
-        depth = depth * depth_scale
-        dist,_,_,_ = cv2.mean(depth)
-        print("Detected an object ", dist, " away")
-        # TODO print this on the image in the corner showing the distance away
-
+        cv2.imshow("QR Code Detection Demo", color_video)
+        # TODO use distance var in payload situation
+        print(distance_away)
         cv2.waitKey(1)
 
 finally:
