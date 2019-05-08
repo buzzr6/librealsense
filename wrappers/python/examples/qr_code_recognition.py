@@ -10,12 +10,16 @@ import pyrealsense2 as rs
 import numpy as np
 import cv2
 import pyzbar.pyzbar as pyzbar
+import socket
 
 # Configure depth and color streams
 pipeline = rs.pipeline()
 config = rs.config()
 config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
 config.enable_stream(rs.stream.color, 960, 540, rs.format.bgr8, 60)
+
+#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+#s.connect(('192.168.8.1', 8554))
 
 distance_away = "pending..."
 
@@ -48,10 +52,11 @@ try:
         depth = np.asanyarray(aligned_depth_frame.get_data())
 
         # Get data scale from the device and convert to meters
-        depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
-        depth = depth * depth_scale
-        dist,_,_,_ = cv2.mean(depth)
-        distance_away = str(round(dist, 3)) + ' meters away'
+        #depth_scale = profile.get_device().first_depth_sensor().get_depth_scale()
+        #depth = depth * depth_scale
+        #dist,_,_,_ = cv2.mean(depth)
+        #distance = str(round(dist, 3))
+        #distance_away = distance + ' meters away'
 
         decodedObjects = pyzbar.decode(color_video)
         for barcode in decodedObjects:
@@ -78,14 +83,28 @@ try:
 
     		# Draw the barcode data and the distance on the video
             (x, y, w, h) = barcode.rect
+            xy_depth = round(depth_frame.get_distance(x, y), 4)
+            print('DEPTH: ' + str(xy_depth) + "  |  X: " + str(round(x)) +  " Y: " + str(round(y)))
+            # TODO based on the pixel coords we can determine if we need to go left or right
+            # also can make sure QR is centered by knowing the pixels it should be in the range of to be centered
+            if w != 0:
+                distance = ((580 * 6)/w) + 1
+                # We know we can detect a code further than this distance so any
+                # number higher is due to error
+                if distance > 50 :
+                    distance_away = "-- inches away"
+                else:
+                    distance_away = str(distance) + ' inches away'
+            # TODO use the x, y pixel coords to get distance away field calculation
+
             barcode_text = ("{} ({})".format(barcode_data, barcode_type))[:20] + '...'
+            cv2.putText(color_video, distance_away, (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2)
             cv2.putText(color_video, barcode_text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-            cv2.putText(color_video, distance_away, (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
             #cv2.putText(color_video, distance_away, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 3)
 
         cv2.imshow("QR Code Detection Demo", color_video)
+        #s.sendall(pickle.dumps(color_frame))
         # TODO use distance var in payload situation
-        print(distance_away)
         cv2.waitKey(1)
 
 finally:
