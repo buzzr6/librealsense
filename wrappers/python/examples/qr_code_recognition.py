@@ -14,7 +14,8 @@ pipeline = rs.pipeline()
 config = rs.config()
 video_height = 540
 video_width = 960
-config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
+#config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
+#config.enable_stream(rs.stream.infrared, 1280, 720, rs.format.y8, 6)
 config.enable_stream(rs.stream.color, video_width, video_height, rs.format.bgr8, 60)
 
 # Set values for the axes
@@ -24,26 +25,18 @@ x_axis = video_width/2
 y_axis = video_height/2
 
 # Determines which quadrant the barcode is within
-def barcode_location(x, y):
+def barcode_location(x):
     if (x < center_x_high) * ( x > center_x_low):
-        return "middle"
-    if x < video_width/2:
-        if y < video_height/2:
-            return "top left"
-    if x < video_width/2:
-        if y > video_height/2:
-            return "bottom left"
-    if x > video_width/2:
-        if y < video_height/2:
-            return "top right"
-    if x > video_width/2:
-        if y > video_height/2:
-            return "bottom right"
+        return "center"
+    if x < x_axis:
+        return "left"
+    if x > x_axis:
+        return "right"
     return "unknown or center"
 
 # Try to connect to the ground station
-#s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-#s.connect(('192.168.8.1', 8554))
+# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+# s.connect(('192.168.8.1', 8554))
 
 distance_away = "pending..."
 
@@ -58,20 +51,35 @@ try:
     while True:
         # Wait for a coherent pair of frames: depth and color
         frames = pipeline.wait_for_frames()
-        depth_frame = frames.get_depth_frame()
+        # depth_frame = frames.get_depth_frame()
+        #infrared_frame = frames.get_infrared_frame()
         color_frame = frames.get_color_frame()
-        if not depth_frame or not color_frame:
+        if not color_frame:
             continue
 
         color_video = np.asanyarray(color_frame.get_data())
+
+        # Converts images from BGR to HSV
+        hsv = cv2.cvtColor(color_video, cv2.COLOR_BGR2HSV)
+        lower_red = np.array([240,240,240])
+        upper_red = np.array([255,255,255])
+
+        mask = cv2.inRange(hsv, lower_red, upper_red)
+
+        # The bitwise and of the frame and mask is done so
+        # that only the blue coloured objects are highlighted
+        # and stored in res
+        res = cv2.bitwise_and(color_video,color_video, mask= mask)
+        cv2.imshow('mask',mask)
+        cv2.imshow('res',res)
 
         decodedObjects = pyzbar.decode(color_video)
         for barcode in decodedObjects:
             points = barcode.polygon
 
             # Draw the x and y axis
-            cv2.line(color_video,(x_axis, video_height),(x_axis, 0),(255,0,0),1)
-            #cv2.line(color_video,(0, y_axis),(video_width, y_axis),(255,0,0),1)
+            # cv2.line(color_video,(x_axis, video_height),(x_axis, 0),(255,0,0),1)
+            # cv2.line(color_video,(0, y_axis),(video_width, y_axis),(255,0,0),1)
 
             # If the points do not form a quad, find convex hull
             if len(points) > 4 :
@@ -100,9 +108,7 @@ try:
             barcode_center_y = (y + (y+h))/2
 
             # Draws a line from the center of the video to the center of the barcode
-            cv2.line(color_video,(x_axis, video_height),(barcode_center_x, barcode_center_y),(255,255,0),1)
-            dist_from_center = x_axis - barcode_center_x
-            print('Distance from center: ' + str(dist_from_center))
+            # cv2.line(color_video,(x_axis, video_height),(barcode_center_x, barcode_center_y),(255,255,0),1)
 
             # xy_depth = round(depth_frame.get_distance(x, y), 3)
             # print('X: ' + str(round(barcode_center_x)) +  "   Y: " + str(round(barcode_center_y)))
@@ -119,19 +125,26 @@ try:
             # Draw the distance, barcode info and cirle around the barcode
             cv2.putText(color_video, distance_away, (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2)
             cv2.putText(color_video, barcode_text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-            cv2.circle(color_video, (barcode_center_x, barcode_center_y), 7, (255, 0, 0), -1)
+            cv2.circle(color_video, (barcode_center_x, barcode_center_y), 6, (255, 0, 0), -1)
             #cv2.putText(color_video, distance_away, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 3)
 
             # If the barcode is in the "middle" show the guiding lines
-            if barcode_location(barcode_center_x ,barcode_center_y) == "middle":
-                # Draw estimated center for rover approach
+            location = barcode_location(barcode_center_x)
+            if location == "center":
+                # Draw estimated center for rover approach, adjust with testing
                 cv2.line(color_video,(center_x_low, video_height),(center_x_low, 0),(0,255,0),2)
                 cv2.line(color_video,(center_x_high, video_height),(center_x_high, 0),(0,255,0),2)
                 # TODO This means barcode is inc enter range, send command
                 # to keep going straight
+            if location == "left":
+                cv2.putText(color_video, "Go Left", (10, video_height - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                # TODO send motor command to adjust to the left
+            if location == "right":
+                cv2.putText(color_video, "Go Right", (video_width -90, video_height -10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                # TODO send motor command to adjust right
 
         cv2.imshow("Barcode Detection", color_video)
-        #s.sendall(pickle.dumps(color_video))
+        # s.sendall(pickle.dumps(color_video))
         cv2.waitKey(1)
 
 
