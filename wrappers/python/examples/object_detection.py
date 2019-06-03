@@ -58,7 +58,7 @@ try:
         retval, bin = cv2.threshold(threshold, 100, 255, cv2.THRESH_BINARY)
         # Find contours
         contours, _ = cv2.findContours(bin, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-        #cv2.imshow('Threshold View', threshold)
+        cv2.imshow('Threshold View', threshold)
 
         # Looping through contours
         # TODO tweak these settings for optimal object detection
@@ -70,13 +70,13 @@ try:
                 mid_x, mid_y = get_midpoint(x,y,w,h)
                 distance = round(aligned_depth_frame.get_distance(mid_x, mid_y)*3.28, 1)
                 distance_away =  str(distance) + ' ft away'
-                
+
                 # ADDED SIZE CRITERION TO REMOVE NOISES
                 size = cv2.contourArea(cnt)
-                if size > 500:
+                if size > 500 and distance < 6.5 and distance != 0.0:
                     # CHANGED DRAWING CONTOURS WITH RECTANGLE
-                    cv2.rectangle(color_video,(x,y),(x+w,y+h),(0,215,255),2)
-                    cv2.putText(color_video, distance_away, (x, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
+                    cv2.rectangle(color_video,(x,y),(x+w,y+h),(0,0,255),2)
+                    cv2.putText(color_video, distance_away, (x, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         #depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_video, alpha=0.03), cv2.COLORMAP_JET)
         #cv2.imshow('Depth Detection', depth_colormap)
         cv2.imshow('Object Detection', color_video)
