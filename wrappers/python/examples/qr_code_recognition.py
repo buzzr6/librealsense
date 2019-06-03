@@ -1,6 +1,4 @@
 #!/usr/bin/python
-## License: Apache 2.0. See LICENSE file in root directory.
-## Copyright(c) 2015-2017 Intel Corporation. All Rights Reserved.
 ## Ridiculou 6 Co. 2019
 
 import pyrealsense2 as rs
@@ -12,17 +10,20 @@ import socket
 # Configure depth and color streams
 pipeline = rs.pipeline()
 config = rs.config()
-video_height = 540
-video_width = 960
-#config.enable_stream(rs.stream.depth, 1280, 720, rs.format.z16, 30)
-#config.enable_stream(rs.stream.infrared, 1280, 720, rs.format.y8, 6)
+video_height = 480
+video_width = 848
+config.enable_stream(rs.stream.depth, 848, 480, rs.format.z16, 90)
 config.enable_stream(rs.stream.color, video_width, video_height, rs.format.bgr8, 60)
 
-# Set values for the axes
+# Set "payload centering" values & the axes
 center_x_low = video_width/2 - 75
 center_x_high = video_width/2 + 75
 x_axis = video_width/2
 y_axis = video_height/2
+
+# Get Alignment information
+align_to = rs.stream.color
+align = rs.align(align_to)
 
 # Determines which quadrant the barcode is within
 def barcode_location(x):
@@ -33,10 +34,6 @@ def barcode_location(x):
     if x > x_axis:
         return "right"
     return "unknown or center"
-
-# Try to connect to the ground station
-# s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-# s.connect(('192.168.8.1', 8554))
 
 distance_away = "pending..."
 
@@ -51,28 +48,20 @@ try:
     while True:
         # Wait for a coherent pair of frames: depth and color
         frames = pipeline.wait_for_frames()
-        # depth_frame = frames.get_depth_frame()
-        #infrared_frame = frames.get_infrared_frame()
-        color_frame = frames.get_color_frame()
-        if not color_frame:
+
+        # Align the depth frame to color frame
+        aligned_frames = align.process(frames)
+
+        # Get aligned frames
+        aligned_depth_frame = aligned_frames.get_depth_frame().as_depth_frame()
+        color_frame = aligned_frames.get_color_frame()
+        if not color_frame and aligned_depth_frame:
             continue
 
+        # Get the RGB video
         color_video = np.asanyarray(color_frame.get_data())
 
-        # Converts images from BGR to HSV
-        hsv = cv2.cvtColor(color_video, cv2.COLOR_BGR2HSV)
-        lower_red = np.array([240,240,240])
-        upper_red = np.array([255,255,255])
-
-        mask = cv2.inRange(hsv, lower_red, upper_red)
-
-        # The bitwise and of the frame and mask is done so
-        # that only the blue coloured objects are highlighted
-        # and stored in res
-        res = cv2.bitwise_and(color_video,color_video, mask= mask)
-        cv2.imshow('mask',mask)
-        cv2.imshow('res',res)
-
+        # Pass in each frame from the video into the library for analyzing
         decodedObjects = pyzbar.decode(color_video)
         for barcode in decodedObjects:
             points = barcode.polygon
@@ -108,19 +97,12 @@ try:
             barcode_center_y = (y + (y+h))/2
 
             # Draws a line from the center of the video to the center of the barcode
+            # TODO could be used in the future to know how far left or right possibly
             # cv2.line(color_video,(x_axis, video_height),(barcode_center_x, barcode_center_y),(255,255,0),1)
 
-            # xy_depth = round(depth_frame.get_distance(x, y), 3)
-            # print('X: ' + str(round(barcode_center_x)) +  "   Y: " + str(round(barcode_center_y)))
-
-            if w != 0:
-                distance = round(((489 * 5.25)/w) -3, 1)  # the -3 compensates for the angle
-                #TODO paper is 5.25 barcode is less
-                # Limits false errors displaying from outside known identification range
-                if distance > 90 :
-                    distance_away = "-- inches away"
-                else:
-                    distance_away = str(distance) + ' inches away'
+            # Get the distance away from the payload
+            distance = round(aligned_depth_frame.get_distance(barcode_center_x, barcode_center_y)*3.28, 1)
+            distance_away = str(distance) + ' ft away'
 
             # Draw the distance, barcode info and cirle around the barcode
             cv2.putText(color_video, distance_away, (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2)
@@ -144,9 +126,7 @@ try:
                 # TODO send motor command to adjust right
 
         cv2.imshow("Barcode Detection", color_video)
-        # s.sendall(pickle.dumps(color_video))
         cv2.waitKey(1)
-
 
 finally:
     # Stop streaming
