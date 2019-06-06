@@ -105,7 +105,7 @@ def analyze_barcode_objects(decodedObjects, aligned_depth_frame, color_video):
 
         # Ignore cases where the distance calculates 0.0ft,
         if distance != 0.0:
-            if distance < 0.8:
+            if distance < 0.8: # when we are this close and we get a trigger that the forklift has it, then we'd switch back
                 subprocess.Popen(["python", str(os.getcwd())+"/object_barcode_detection.py"])
                 sys.exit()
             distance_away = str(distance) + ' ft away'

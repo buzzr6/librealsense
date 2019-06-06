@@ -36,6 +36,7 @@ def detect_objects(aligned_depth_frame, color_video):
             # Get the midpoint of the object and calculate the distance
             mid_x, mid_y = get_midpoint(x,y,w,h)
             distance = round(aligned_depth_frame.get_distance(mid_x, mid_y)*3.28, 1)
+            #TODO when distance is X ft away trigger the kickoff dodge maneuver
             distance_away =  str(distance) + ' ft away'
 
             # Size check removes noise
