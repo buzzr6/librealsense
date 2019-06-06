@@ -64,19 +64,25 @@ try:
         # TODO tweak these settings for optimal object detection
         for cnt in contours:
             x, y, w, h = cv2.boundingRect(cnt)
-            if w > 60 and h > 60:
+            #if w > 300 and h > 90:
 
-                # Get the midpoint of the object and calculate the distance
-                mid_x, mid_y = get_midpoint(x,y,w,h)
-                distance = round(aligned_depth_frame.get_distance(mid_x, mid_y)*3.28, 1)
-                distance_away =  str(distance) + ' ft away'
+            # Get the midpoint of the object and calculate the distance
+            mid_x, mid_y = get_midpoint(x,y,w,h)
+            distance = round(aligned_depth_frame.get_distance(mid_x, mid_y)*3.28, 1)
+            distance_away =  str(distance) + ' ft away'
 
-                # ADDED SIZE CRITERION TO REMOVE NOISES
-                size = cv2.contourArea(cnt)
-                if size > 500 and distance < 6.5 and distance != 0.0:
-                    # CHANGED DRAWING CONTOURS WITH RECTANGLE
+            # Size check removes noise
+            size = cv2.contourArea(cnt)
+            if size > 800 and distance < 6.5 and distance != 0.0:
+                # CHANGED DRAWING CONTOURS WITH RECTANGLE
+                cv2.putText(color_video, distance_away, (x, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                if distance < 2.5:
+                    # red if too close
                     cv2.rectangle(color_video,(x,y),(x+w,y+h),(0,0,255),2)
-                    cv2.putText(color_video, distance_away, (x, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                else:
+                    # yellow identifies obstacle
+                    cv2.rectangle(color_video,(x,y),(x+w,y+h),(0,255,255),2)
+
         #depth_colormap = cv2.applyColorMap(cv2.convertScaleAbs(depth_video, alpha=0.03), cv2.COLORMAP_JET)
         #cv2.imshow('Depth Detection', depth_colormap)
         cv2.imshow('Object Detection', color_video)
