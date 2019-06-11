@@ -12,6 +12,12 @@ def get_midpoint(x,y,w,h):
     mid_y = y+ (h/2)
     return (mid_x, mid_y)
 
+# Removes object detection frame around the video stream
+def isItself(w,h):
+    if 843 <= w <= 848 and 473 <= h <= 480:
+        return True
+    return False
+
 def detect_objects(aligned_depth_frame, color_video):
     # Gaussian blur
     blurred = cv2.GaussianBlur(color_video, (5, 5), 0)
@@ -31,20 +37,19 @@ def detect_objects(aligned_depth_frame, color_video):
         x, y, w, h = cv2.boundingRect(cnt)
 
         # Ignores drawing around the video window and too small of objects
-        if w != 846 and h!= 478 and w > 100 and h > 100:
+        if not isItself(w,h) and w > 100 and h > 100:
 
             # Get the midpoint of the object and calculate the distance
             mid_x, mid_y = get_midpoint(x,y,w,h)
             distance = round(aligned_depth_frame.get_distance(mid_x, mid_y)*3.28, 1)
             #TODO when distance is X ft away trigger the kickoff dodge maneuver
             distance_away =  str(distance) + ' ft away'
-
             # Size check removes noise
             size = cv2.contourArea(cnt)
             if size > 300 and distance < 6.5 and distance != 0.0:
                 #print(str(w) + "  " + str(h) + "  " + distance_away)
                 # CHANGED DRAWING CONTOURS WITH RECTANGLE
-                cv2.putText(color_video, distance_away, (x, y - 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+                cv2.putText(color_video, distance_away, (x, y + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
                 if distance < 2.5:
                     # red if too close
                     cv2.rectangle(color_video,(x,y),(x+w,y+h),(0,0,255),2)
