@@ -1,7 +1,9 @@
 #!/usr/bin/python
 ## Ridiculou 6 Co. 2019
 
-from barcode_rec_methods import analyze_barcode_objects
+## This script dynamically switches between detcting obstacles and identifying
+## payload objects to pickup
+
 from object_detection_methods import detect_objects
 import pyrealsense2 as rs
 import numpy as np
@@ -32,7 +34,14 @@ profile = pipeline.start(config)
 for x in range(5):
   pipeline.wait_for_frames()
 
-distance_away = "pending..."
+# Returns barcode information relating to embedded info
+def get_barcode_text(barcode):
+    # The barcode data is a bytes object so if we want to draw it
+    # on our output image we need to convert it to a string first
+    barcode_data = barcode.data.decode("utf-8")
+    barcode_type = barcode.type
+    barcode_text = ("{} ({})".format(barcode_data, barcode_type))[:2]
+    return barcode_text
 
 try:
     while True:
@@ -54,16 +63,32 @@ try:
         # Barcode analyzation
         decodedObjects = pyzbar.decode(color_video, symbols=[ZBarSymbol.CODE128])
         if len(decodedObjects) > 0:
-            #TODO send command to stop rover, then execute script
-            subprocess.Popen(["python", str(os.getcwd())+"/barcode_rec_runnable.py"])
-            sys.exit()
-        #analyze_barcode_objects(decodedObjects, aligned_depth_frame, color_video)
+            for barcode in decodedObjects:
+                # Read the barcode and check which payload it is ex) 'P1'
+                barcode_text = get_barcode_text(barcode)
+                exists = False
 
-        # Object analyzation
-        #if len(decodedObjects) == 0:
+                # Open payload log to see if we have seen this ID before
+                with open("payload.txt","r+") as file:
+
+                    # Search through the file line by line to look for the ID
+                    for line in file:
+                        if line[:2] == barcode_text:
+                            exists = True
+
+                    if not exists:
+                        # If this is the first time we see the object write the payload ID in
+                        file.write(barcode_text + "\n")
+                        file.close()
+
+                        #TODO send command to stop rover, then execute script
+                        subprocess.Popen(["python", str(os.getcwd())+"/barcode_rec_runnable.py"])
+                        sys.exit()
+
+        # Object analyzation/ handles obstacle avoidance
         detect_objects(aligned_depth_frame, color_video)
 
-        cv2.imshow("Barcode Detection", color_video)
+        cv2.imshow("Object Detection", color_video)
         k = cv2.waitKey(1) & 0xFF
         # press 'q' to exit script
         if k == ord('q'):

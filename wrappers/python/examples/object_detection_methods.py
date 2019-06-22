@@ -1,10 +1,11 @@
 #!/usr/bin/python
 ## Ridiculou 6 Co. 2019
 
+## This sript hanles identifying objects and avoiding them
+
 import pyrealsense2 as rs
 import numpy as np
 import cv2
-
 
 # Calculate the midpoint of the object for distance calculation
 def get_midpoint(x,y,w,h):
@@ -18,6 +19,7 @@ def isItself(w,h):
         return True
     return False
 
+# After layers of altering the image, detects obstacles
 def detect_objects(aligned_depth_frame, color_video):
     # Gaussian blur
     blurred = cv2.GaussianBlur(color_video, (5, 5), 0)
@@ -31,6 +33,7 @@ def detect_objects(aligned_depth_frame, color_video):
     contours, _ = cv2.findContours(bin, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
     cv2.imshow('Threshold View', threshold)
 
+    distance = 0.0
     # Looping through contours
     # TODO tweak these settings for optimal object detection
     for cnt in contours:
@@ -46,9 +49,10 @@ def detect_objects(aligned_depth_frame, color_video):
             distance_away =  str(distance) + ' ft away'
             # Size check removes noise
             size = cv2.contourArea(cnt)
+
+            # Filters out unwanted objects
             if size > 300 and distance < 6.5 and distance != 0.0:
                 #print(str(w) + "  " + str(h) + "  " + distance_away)
-                # CHANGED DRAWING CONTOURS WITH RECTANGLE
                 cv2.putText(color_video, distance_away, (x, y + 20), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
                 if distance < 2.5:
                     # red if too close

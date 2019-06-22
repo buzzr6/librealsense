@@ -1,6 +1,8 @@
 #!/usr/bin/python
 ## Ridiculou 6 Co. 2019
 
+## This script is responsible for identifying the payload and performing the
+## commands to pick up the payload
 
 import pyrealsense2 as rs
 import numpy as np
@@ -105,6 +107,8 @@ def analyze_barcode_objects(decodedObjects, aligned_depth_frame, color_video):
 
         # Ignore cases where the distance calculates 0.0ft,
         if distance != 0.0:
+            # TODO this is where we would have a while loop checking for
+            # the hall a fax (w.e) sensor detecting we picked it up
             if distance < 0.8: # when we are this close and we get a trigger that the forklift has it, then we'd switch back
                 subprocess.Popen(["python", str(os.getcwd())+"/object_barcode_detection.py"])
                 sys.exit()
@@ -118,6 +122,7 @@ def analyze_barcode_objects(decodedObjects, aligned_depth_frame, color_video):
 
         # Determine barcode location and adjust accordingly
         location = barcode_location(barcode_center_x, color_video)
+        print("adjusting") #make sure we keep checking the location until pickup
 
 try:
     while True:
