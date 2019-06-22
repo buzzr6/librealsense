@@ -34,7 +34,7 @@ profile = pipeline.start(config)
 for x in range(5):
   pipeline.wait_for_frames()
 
-# Returns barcode information relating to embedded info
+# Returns the embedded information in the barcode
 def get_barcode_text(barcode):
     # The barcode data is a bytes object so if we want to draw it
     # on our output image we need to convert it to a string first
@@ -81,7 +81,9 @@ try:
                         file.write(barcode_text + "\n")
                         file.close()
 
-                        #TODO send command to stop rover, then execute script
+                        #TODO INSERT MOTOR COMMAND TO STOP ROVER HERE
+                        #TODO INSERT LOWER FORKLIFT COMMAND HERE, write out to file which one we
+                        #     picked so we can use the other one, after both are used, clear file for next two payloads
                         subprocess.Popen(["python", str(os.getcwd())+"/barcode_rec_runnable.py"])
                         sys.exit()
 

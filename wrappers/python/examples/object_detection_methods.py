@@ -31,11 +31,10 @@ def detect_objects(aligned_depth_frame, color_video):
     retval, bin = cv2.threshold(threshold, 100, 255, cv2.THRESH_BINARY)
     # Find contours
     contours, _ = cv2.findContours(bin, cv2.RETR_LIST, cv2.CHAIN_APPROX_SIMPLE)
-    cv2.imshow('Threshold View', threshold)
+    #cv2.imshow('Threshold View', threshold)
 
     distance = 0.0
     # Looping through contours
-    # TODO tweak these settings for optimal object detection
     for cnt in contours:
         x, y, w, h = cv2.boundingRect(cnt)
 

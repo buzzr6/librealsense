@@ -42,19 +42,18 @@ for x in range(5):
 # Determines which quadrant the barcode is within
 def barcode_location(x, color_video):
     if (x < center_x_high) * ( x > center_x_low):
-        # Draw estimated center for rover approach, adjust with testing
+        # Draw estimated center for rover approach, ADJUST TO CENTER THROUGH TESTING WITH FORKLIFT
         cv2.line(color_video,(center_x_low, video_height),(center_x_low, 0),(0,255,0),2)
         cv2.line(color_video,(center_x_high, video_height),(center_x_high, 0),(0,255,0),2)
-        # TODO This means barcode is in center range, send command
-        # to keep going straight
+        # TODO INSERT MOTOR COMMAND HERE TO GO STRAIGHT AND SLOW
         return "center"
     if x < x_axis:
         cv2.putText(color_video, "Go Left", (10, video_height - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-        # TODO send motor command to adjust to the left, short burst left
+        # TODO INSERT MOTOR COMMAND HERE TO DRIVE A TAD LEFT
         return "left"
     if x > x_axis:
         cv2.putText(color_video, "Go Right", (video_width -90, video_height -10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
-        # TODO send motor command to adjust right, short burst right
+        # TODO INSERT MOTOR COMMAND HERE TO DRIVE A TAD RIGHT
         return "right"
     return "unknown"
 
@@ -107,22 +106,24 @@ def analyze_barcode_objects(decodedObjects, aligned_depth_frame, color_video):
 
         # Ignore cases where the distance calculates 0.0ft,
         if distance != 0.0:
-            # TODO this is where we would have a while loop checking for
-            # the hall a fax (w.e) sensor detecting we picked it up
-            if distance < 0.8: # when we are this close and we get a trigger that the forklift has it, then we'd switch back
+            # TODO INSERT HALLIFAX OR WHATEVER SENSOR CODE HERE to know we picked up the payload
+            #      this will check if the value is a 1 or 0, once a 1 then
+            #      1) lift up FORKLIFT here, check file for which one to lift (mentioned in other script)
+            #      2) swtich to the other script via the lines below, done
+
+            if distance < 0.8: # this trigger will be changed to the magnetic sensor
                 subprocess.Popen(["python", str(os.getcwd())+"/object_barcode_detection.py"])
                 sys.exit()
             distance_away = str(distance) + ' ft away'
 
-            # Draw the distance, barcode info and cirle around the barcode
+            # Draw the distance, barcode info and cirle around the barcode, KEEP FOR TESTING
             cv2.putText(color_video, distance_away, (x, y - 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 255, 255), 2)
             cv2.putText(color_video, barcode_text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
             cv2.circle(color_video, (barcode_center_x, barcode_center_y), 6, (255, 0, 0), -1)
             #cv2.putText(color_video, distance_away, (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 3)
 
-        # Determine barcode location and adjust accordingly
+        # Determine barcode location and adjust accordingly until the pickup trigger above is executed
         location = barcode_location(barcode_center_x, color_video)
-        print("adjusting") #make sure we keep checking the location until pickup
 
 try:
     while True:
