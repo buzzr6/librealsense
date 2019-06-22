@@ -6,11 +6,10 @@ These Examples demonstrate how to use the python wrapper of the SDK.
 ## R6 Scripts:
 
 I've created a couple scripts here.
-1. `barcode_rec_methods.py` contains all the methods needed for another class to leverage barcode detection
-2. `barcode_rec_runnable.py` is the exectuable script that runs barcode detection and has the ability to switch over to object detection once the payload is "picked up"
-3. `object_detection_methods.py` contains all the methods needed for another class to leverage object detection
-4. `object_detection_runnable.py` is the executable script that runs solely object detection
-5. `object_barcode_detection.py` this is the **MAIN** script that leverages both barcode and object detection
+1. `barcode_rec_runnable.py` is the exectuable script that runs barcode detection and has the ability to switch over to object detection once the payload is "picked up"
+2. `object_detection_methods.py` contains all the methods needed for another class to leverage object detection
+3. `object_detection_runnable.py` is the executable script that runs solely object detection (not as up to date as method class)
+4. `object_barcode_detection.py` this is the **MAIN** script that leverages both barcode and object detection
 * It starts out by examining the frame for a barcode image, if it does not find one it resumes obstacle avoidance and object detection
 * Once the vehicle detects a barcode, it switches over to the barcode script where it handles picking up the payload, once it deemed the payload secured it will switch back to the MAIN script
 * This implementation eliminates the need for an object detection script to "ignore" a barcode and not mistake it as an obstacle
