@@ -24,8 +24,8 @@ config.enable_stream(rs.stream.color, video_width, video_height, rs.format.bgr8,
 # Set "payload centering" values & the axes
 center_x_low = video_width/2 - 75
 center_x_high = video_width/2 + 75
-x_axis = video_width/2
-y_axis = video_height/2
+y_axis = video_width/2
+x_axis = video_height/2
 
 # Get Alignment information
 align_to = rs.stream.color
@@ -47,11 +47,11 @@ def barcode_location(x, color_video):
         cv2.line(color_video,(center_x_high, video_height),(center_x_high, 0),(0,255,0),2)
         # TODO INSERT MOTOR COMMAND HERE TO GO STRAIGHT AND SLOW
         return "center"
-    if x < x_axis:
+    if x < y_axis:
         cv2.putText(color_video, "Go Left", (10, video_height - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         # TODO INSERT MOTOR COMMAND HERE TO DRIVE A TAD LEFT
         return "left"
-    if x > x_axis:
+    if x > y_axis:
         cv2.putText(color_video, "Go Right", (video_width -90, video_height -10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 1)
         # TODO INSERT MOTOR COMMAND HERE TO DRIVE A TAD RIGHT
         return "right"
@@ -105,13 +105,14 @@ def analyze_barcode_objects(decodedObjects, aligned_depth_frame, color_video):
         distance = round(aligned_depth_frame.get_distance(barcode_center_x, barcode_center_y)*3.28, 1)
 
         # Ignore cases where the distance calculates 0.0ft,
+        # maybe we dont care and can allow 0.0, we just keep driving anyway
         if distance != 0.0:
             # TODO INSERT HALLIFAX OR WHATEVER SENSOR CODE HERE to know we picked up the payload
             #      this will check if the value is a 1 or 0, once a 1 then
             #      1) lift up FORKLIFT here, check file for which one to lift (mentioned in other script)
             #      2) swtich to the other script via the lines below, done
 
-            if distance < 0.8: # this trigger will be changed to the magnetic sensor
+            if distance < 1.2: # this trigger will be changed to the magnetic sensor
                 subprocess.Popen(["python", str(os.getcwd())+"/object_barcode_detection.py"])
                 sys.exit()
             distance_away = str(distance) + ' ft away'
