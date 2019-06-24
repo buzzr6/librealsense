@@ -69,7 +69,7 @@ try:
                 exists = False
 
                 # Open payload log to see if we have seen this ID before
-                with open("payload.txt","r+") as file:
+                with open("/home/buzzr6/git/librealsense/wrappers/python/examples/payload.txt","r+") as file:
 
                     # Search through the file line by line to look for the ID
                     for line in file:
@@ -84,7 +84,7 @@ try:
                         #TODO INSERT MOTOR COMMAND TO STOP ROVER HERE
                         #TODO INSERT LOWER FORKLIFT COMMAND HERE, write out to file which one we
                         #     picked so we can use the other one, after both are used, clear file for next two payloads
-                        subprocess.Popen(["python", str(os.getcwd())+"/barcode_rec_runnable.py"])
+                        subprocess.Popen(["python", "/home/buzzr6/git/librealsense/wrappers/python/examples/barcode_rec_runnable.py"])
                         sys.exit()
 
         # Object analyzation/ handles obstacle avoidance

@@ -16,13 +16,16 @@ I've created a couple scripts here.
 * This implementation eliminates the need for an object detection script to "ignore" a barcode and not mistake it as an obstacle
 * We wouldnt be able to detect a barcode if there was a obstacle in front of it so its a safe case
 
-## Cronjob Instructions
+## Crontab Instructions
 
-On bootup of the UP board, the cron job kicks off which executes specific scripts for the mission.  Currently I have the object detection script kicking off and clearing the payload.txt file.  What **needs** to be added is the connection to the ground station (if necessary) and kick off any other scripts relating to IED detection. Or the RTSP server to stream video.
+On bootup of the UP board, the crontab kicks off which executes specific scripts for the mission.  Currently I have the object detection script kicking off and clearing the payload.txt file.  What **needs** to be added is the connection to the ground station (if necessary) and kick off any other scripts relating to IED detection. Or the RTSP server to stream video.
 
 To view the cronjob and edit it
 1. cd
 2. crontab -e
 * this brings the user into the cron editor
 3. Make appropriate edits and view documentation link if necessary
-4. To save and exit "Crtl+X" then hit enter
+4. To save and exit do "Crtl+X" then "y" then hit enter
+
+
+**Currently I updated the scripts to use the local paths that are on the UP board, if youre running this on your personal computer make sure to update those paths locally and NOT commit them**

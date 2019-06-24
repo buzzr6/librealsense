@@ -113,7 +113,7 @@ def analyze_barcode_objects(decodedObjects, aligned_depth_frame, color_video):
             #      2) swtich to the other script via the lines below, done
 
             if distance < 1.2: # this trigger will be changed to the magnetic sensor
-                subprocess.Popen(["python", str(os.getcwd())+"/object_barcode_detection.py"])
+                subprocess.Popen(["python", "/home/buzzr6/git/librealsense/wrappers/python/examples/object_barcode_detection.py"])
                 sys.exit()
             distance_away = str(distance) + ' ft away'
 
