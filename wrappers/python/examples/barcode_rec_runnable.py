@@ -8,6 +8,7 @@ import pyrealsense2 as rs
 import numpy as np
 import cv2
 import pyzbar.pyzbar as pyzbar
+from pyzbar.pyzbar import ZBarSymbol
 import socket
 import sys
 import subprocess
@@ -142,9 +143,11 @@ try:
 
         # Get the RGB video
         color_video = np.asanyarray(color_frame.get_data())
+	# TODO send video frame (color_video) to the other script, test perfomance decrease
+	#      figure out the format of color_video, could work as is
 
         # Pass in each frame from the video into the library for analyzing
-        decodedObjects = pyzbar.decode(color_video)
+        decodedObjects = pyzbar.decode(color_video, symbols=[ZBarSymbol.CODE128])
         analyze_barcode_objects(decodedObjects, aligned_depth_frame, color_video)
 
         cv2.imshow("Barcode Detection", color_video)

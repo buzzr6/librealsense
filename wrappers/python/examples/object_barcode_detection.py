@@ -59,6 +59,8 @@ try:
 
         # Get the RGB video
         color_video = np.asanyarray(color_frame.get_data())
+        # TODO send video frame (color_video) to the other script, test perfomance decrease
+        #      figure out the format of color_video, could work as is
 
         # Barcode analyzation
         decodedObjects = pyzbar.decode(color_video, symbols=[ZBarSymbol.CODE128])
