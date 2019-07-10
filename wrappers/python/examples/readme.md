@@ -27,6 +27,10 @@ To view the cronjob and edit it
 ## Xubuntu 16.04 64-bit LibrealSense Downloads Doc:
 
 1. Had to “unlock the front end” to use the sudo apt-get commands to download stuff
+* sudo rm /var/cache/apt/archives/lock
+* sudo rm /var/lib/dpkg/lock
+* sudo rm /var/lib/apt/lists/lock
+
 2. sudo apt-get install git
 3. sudo apt-get install vim
 4. Installed gedit (for Grisam :)
