@@ -37,7 +37,7 @@ To view the cronjob and edit it
 5. Git Cloned QR Code repo
 6. I now have librealsense repo, lets see how to install and build everything
 7. sudo apt install python-pip
-8. pip install pyrealsense2
+8. pip install pyrealsense2 (dont need to do it) need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2, then update PYTHONPATH to be where the pyrealsense is
 9. sudo apt-get update && sudo apt-get upgrade
 Okay that took forever lol
 10. Downloading OpenCV from the opencv page
@@ -51,7 +51,7 @@ Download before downloading python stuff
 17. All that I was able to run the cmake command to build the python examples
 18. sudo pip install numpy
 19. Complete OpenCv build in the opencv git folder before tyring to build the opencv examples in the librealsense git folder
-20. pip install opencv-python
+20. pip install opencv-python or sudo apt install python-opencv
 
 
 ### Now, the LibrealSense2 Build
