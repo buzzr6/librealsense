@@ -53,8 +53,8 @@ I now have librealsense repo, lets see how to install and build everything
 **Download before downloading python stuff:**<br>
 sudo apt install cmake<br>
 sudo apt-get install libx11-dev<br>
-sudo apt-get install libglfw3-dev
-sudo apt-get install git libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev 
+sudo apt-get install libglfw3-dev<br>
+sudo apt-get install libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev 
 
 **Downloading OpenCV from the opencv page**, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
 
