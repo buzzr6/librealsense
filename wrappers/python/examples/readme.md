@@ -65,15 +65,26 @@ sudo modprobe uvcvideo
 Following this https://github.com/buzzr6/librealsense/blob/QRCode/doc/installation.md<br>
 Disregard toolchain updates
 
-**Downloading OpenCV from the opencv page**, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
+**OPENCV INSTRUCTIONS:**, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html<br>
+git clone https://github.com/opencv/opencv.git<br>
+mkdir build<br>
+cd build<br>
+Build: cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..<br>
+make -j2<br>
+sudo make install<br>
+export OpenCV_DIR=~/opencv/build<br>
+**Go back and build opencv examples with: ** in the /build folder cmake ../ -DBUILD_CV_EXAMPLES=true<br>
+sudo make uninstall && make clean && make && sudo make install
 
-Complete OpenCv build in the opencv git folder before tyring to build the opencv examples in the librealsense git folder
 pip install opencv-python or sudo apt install python-opencv
 
-**Python Stuff:**<br>
+**PYTHON INSTRUCTIONS:**<br>
 https://github.com/buzzr6/librealsense/tree/master/wrappers/python<br>
 sudo apt install python-pip<br>
 sudo apt-get install python python-dev
+cmake ../ -DBUILD_PYTHON_BINDINGS=bool:true<br>
+make -j2<br>
+sudo make install
 
 Need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2<br>
 Update .bashrc with this line after build **export PYTHONPATH=$PYTHONPATH:/usr/local/lib**
