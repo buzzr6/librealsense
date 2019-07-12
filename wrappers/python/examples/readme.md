@@ -49,17 +49,12 @@ Git Cloned QR Code repo:<br>
 I now have librealsense repo, lets see how to install and build everything
 
 Download before downloading python stuff:<br>
-sudo apt install cmake
-
-sudo apt-get install pkg-config
-
-sudo apt-get install libusb-1.0-0-dev
-
-sudo apt-get install libx11-dev
-
-sudo apt-get install xorg-dev libglu1-mesa-dev
-
-sudo apt-get install build-essential libgtk-3-dev
+sudo apt install cmake<br>
+sudo apt-get install pkg-config<br>
+sudo apt-get install libusb-1.0-0-dev<br>
+sudo apt-get install libx11-dev<br>
+sudo apt-get install xorg-dev libglu1-mesa-dev<br>
+sudo apt-get install build-essential libgtk-3-dev<br>
 
 Downloading OpenCV from the opencv page, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
 
