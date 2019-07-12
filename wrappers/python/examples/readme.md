@@ -45,22 +45,10 @@ usbhid mousepoll=1
 
 sudo apt-get install git vim
 
-
 Git Cloned QR Code repo:<br>
 I now have librealsense repo, lets see how to install and build everything
 
-sudo apt install python-pip
-
-pip install pyrealsense2 (dont need to do it) need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2, then update PYTHONPATH to be where the pyrealsense is
-
-sudo apt-get update && sudo apt-get upgrade
-
-Okay that took forever lol
-
-Downloading OpenCV from the opencv page, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
-
-Download before downloading python stuff
-
+Download before downloading python stuff:<br>
 sudo apt install cmake
 
 sudo apt-get install pkg-config
@@ -73,13 +61,24 @@ sudo apt-get install xorg-dev libglu1-mesa-dev
 
 sudo apt-get install build-essential libgtk-3-dev
 
-All that I was able to run the cmake command to build the python examples
-
-sudo pip install numpy
+Downloading OpenCV from the opencv page, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
 
 Complete OpenCv build in the opencv git folder before tyring to build the opencv examples in the librealsense git folder
 pip install opencv-python or sudo apt install python-opencv
 
+Python Stuff: <br>
+https://github.com/buzzr6/librealsense/tree/master/wrappers/python<br>
+sudo apt install python-pip<br>
+sudo apt-get install python python-dev
+
+pip install pyrealsense2 (dont need to do it) need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2, then update PYTHONPATH to be where the pyrealsense is
+
+sudo apt-get update && sudo apt-get upgrade
+
+Okay that took forever lol<br>
+All that I was able to run the cmake command to build the python examples
+
+sudo pip install numpy
 
 ### Now, the LibrealSense2 Build
 1. Following this https://github.com/buzzr6/librealsense/blob/QRCode/doc/distribution_linux.md
