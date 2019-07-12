@@ -78,8 +78,8 @@ cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..<br>
 make -j2<br>
 sudo make install<br>
 export OpenCV_DIR=~/opencv/build<br>
-**Go back and build opencv examples with:** in the /build folder cmake ../ -DBUILD_CV_EXAMPLES=true<br>
-sudo make uninstall && make clean && make && sudo make install
+**Go back and build opencv examples with:** in the /build folder cmake ../ -DBUILD_CV_EXAMPLES=true<br> 
+make -j3 && sudo make install
 
 pip install opencv-python or sudo apt install python-opencv
 
