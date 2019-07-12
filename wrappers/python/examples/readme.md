@@ -34,6 +34,7 @@ Had to “unlock the front end” to use the sudo apt-get commands to download s
 sudo apt-get install git vim
 
 **Auto login:**<br>
+sudo vim /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf<br>
 [SeatDefaults]<br>
 greeter-session=lightdm-gtk-greeter<br>
 autologin-user=odroid
