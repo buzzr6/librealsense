@@ -56,6 +56,12 @@ sudo apt-get install libx11-dev<br>
 sudo apt-get install libglfw3-dev<br>
 sudo apt-get install libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev 
 
+**Odroid specific commands:**<br>
+./scripts/setup_udevrules.sh<br>
+Odroid: ./scripts/patch-realsense-ubuntu-odroid.sh<br>
+sudo udevadm control --reload-rules && udevadm trigger<br>
+sudo modprobe uvcvideo
+
 **Downloading OpenCV from the opencv page**, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
 
 Complete OpenCv build in the opencv git folder before tyring to build the opencv examples in the librealsense git folder
@@ -66,7 +72,7 @@ https://github.com/buzzr6/librealsense/tree/master/wrappers/python<br>
 sudo apt install python-pip<br>
 sudo apt-get install python python-dev
 
-pip install pyrealsense2 (dont need to do it) need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2, then update PYTHONPATH to be where the pyrealsense is
+Need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2, then update PYTHONPATH to be where the pyrealsense is /usr/bin/local
 
 sudo apt-get update && sudo apt-get upgrade
 
@@ -76,6 +82,6 @@ All that I was able to run the cmake command to build the python examples
 sudo pip install numpy
 
 ### Now, the LibrealSense2 Build
-1. Following this https://github.com/buzzr6/librealsense/blob/QRCode/doc/distribution_linux.md
+1. Following this https://github.com/buzzr6/librealsense/blob/QRCode/doc/installation.md
 2. sudo apt-get install libzbar0
 3. pip install pyzbar
