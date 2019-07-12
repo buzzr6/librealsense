@@ -33,8 +33,8 @@ Had to “unlock the front end” to use the sudo apt-get commands to download s
 
 
 Auto login<br>
-[SeatDefaults]
-greeter-session=lightdm-gtk-greeter
+[SeatDefaults]<br>
+greeter-session=lightdm-gtk-greeter<br>
 autologin-user=odroid
 
 Mouse issue:</br>
