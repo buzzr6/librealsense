@@ -50,14 +50,14 @@ usbhid mousepoll=1
 **Git Cloned QR Code repo:**<br>
 I now have librealsense repo, lets see how to install and build everything
 
-
+<br>
 ### Download before downloading python stuff
 sudo apt install cmake<br>
 sudo apt-get install libx11-dev<br>
 sudo apt-get install libglfw3-dev<br>
 sudo apt-get install libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev 
 
-
+<br>
 ### Odroid specific commands
 ./scripts/patch-realsense-ubuntu-odroid.sh./scripts/setup_udev_rules.sh<br>
 Odroid: ./scripts/patch-realsense-ubuntu-odroid-xu4-4.14.sh<br>
@@ -67,7 +67,7 @@ sudo modprobe uvcvideo
 Following this https://github.com/buzzr6/librealsense/blob/QRCode/doc/installation.md<br>
 Disregard toolchain updates
 
-
+<br>
 ### OPENCV INSTRUCTIONS
 https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv<br>
 https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html<br>
@@ -83,11 +83,11 @@ sudo make uninstall && make clean && make && sudo make install
 
 pip install opencv-python or sudo apt install python-opencv
 
-
+<br>
 ### PYTHON INSTRUCTIONS
 https://github.com/buzzr6/librealsense/tree/master/wrappers/python<br>
 sudo apt install python-pip<br>
-sudo apt-get install python python-dev
+sudo apt-get install python python-dev<br>
 cmake ../ -DBUILD_PYTHON_BINDINGS=bool:true<br>
 make -j2<br>
 sudo make install<br>
