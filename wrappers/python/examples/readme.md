@@ -90,7 +90,7 @@ sudo apt install python-pip<br>
 sudo apt-get install python python-dev<br>
 cmake ../ -DBUILD_PYTHON_BINDINGS=bool:true<br>
 cmake ../ -DBUILD_PYTHON_BINDINGS=bool:true -DPYTHON_EXECUTABLE=/usr/bin/python or 2.7<br>
-make -j2<br>
+go into /build/wrappers/python make -j2<br>
 sudo make install<br>
 sudo apt-get install libzbar0<br>
 pip install pyzbar<br>
