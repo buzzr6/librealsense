@@ -32,12 +32,12 @@ Had to “unlock the front end” to use the sudo apt-get commands to download s
 * sudo rm /var/lib/apt/lists/lock
 
 
-Auto login<br>
+**Auto login:**<br>
 [SeatDefaults]<br>
 greeter-session=lightdm-gtk-greeter<br>
 autologin-user=odroid
 
-Mouse issue:</br>
+**Mouse issue:**</br>
 sudo vim /etc/modules
 add these lines
 -r usbhid <br>
@@ -45,23 +45,23 @@ usbhid mousepoll=1
 
 sudo apt-get install git vim
 
-Git Cloned QR Code repo:<br>
+**Git Cloned QR Code repo:**<br>
 I now have librealsense repo, lets see how to install and build everything
 
-Download before downloading python stuff:<br>
+**Download before downloading python stuff:**<br>
 sudo apt install cmake<br>
 sudo apt-get install pkg-config<br>
 sudo apt-get install libusb-1.0-0-dev<br>
 sudo apt-get install libx11-dev<br>
 sudo apt-get install xorg-dev libglu1-mesa-dev<br>
-sudo apt-get install build-essential libgtk-3-dev<br>
+sudo apt-get install build-essential libgtk-3-dev<br>sudo apt-get install --install-recommends linux-generic-lts-xenial xserver-xorg-core-lts-xenial xserver-xorg-lts-xenial xserver-xorg-video-all-lts-xenial xserver-xorg-input-all-lts-xenial libwayland-egl1-mesa-lts-xenial
 
-Downloading OpenCV from the opencv page, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
+**Downloading OpenCV from the opencv page**, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
 
 Complete OpenCv build in the opencv git folder before tyring to build the opencv examples in the librealsense git folder
 pip install opencv-python or sudo apt install python-opencv
 
-Python Stuff: <br>
+**Python Stuff:**<br>
 https://github.com/buzzr6/librealsense/tree/master/wrappers/python<br>
 sudo apt install python-pip<br>
 sudo apt-get install python python-dev
