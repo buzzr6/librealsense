@@ -30,22 +30,23 @@ Had to “unlock the front end” to use the sudo apt-get commands to download s
 * sudo rm /var/cache/apt/archives/lock
 * sudo rm /var/lib/dpkg/lock
 * sudo rm /var/lib/apt/lists/lock
-* auto login
 
+
+Auto login<br>
 [SeatDefaults]
 greeter-session=lightdm-gtk-greeter
 autologin-user=odroid
 
-mouse issue: create /boot/cmdline.txt file and add in line usbhid.mousepoll=0
+Mouse issue:</br>
+sudo vim /etc/modules
+add these lines
+-r usbhid <br>
+usbhid mousepoll=1
 
-sudo apt-get install git
+sudo apt-get install git vim
 
-sudo apt-get install vim
 
-Installed gedit (for Grisam :)
-
-Git Cloned QR Code repo:
-
+Git Cloned QR Code repo:<br>
 I now have librealsense repo, lets see how to install and build everything
 
 sudo apt install python-pip
