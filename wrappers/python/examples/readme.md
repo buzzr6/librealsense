@@ -54,7 +54,6 @@ sudo apt-get install pkg-config<br>
 sudo apt-get install libusb-1.0-0-dev<br>
 sudo apt-get install libx11-dev<br>
 sudo apt-get install xorg-dev libglu1-mesa-dev<br>
-sudo apt-get install build-essential libgtk-3-dev<br>sudo apt-get install --install-recommends linux-generic-lts-xenial xserver-xorg-core-lts-xenial xserver-xorg-lts-xenial xserver-xorg-video-all-lts-xenial xserver-xorg-input-all-lts-xenial libwayland-egl1-mesa-lts-xenial
 
 **Downloading OpenCV from the opencv page**, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
 
