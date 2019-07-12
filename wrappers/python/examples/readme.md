@@ -50,13 +50,13 @@ usbhid mousepoll=1
 **Git Cloned QR Code repo:**<br>
 I now have librealsense repo, lets see how to install and build everything
 
-**Download before downloading python stuff:**<br>
+### Download before downloading python stuff
 sudo apt install cmake<br>
 sudo apt-get install libx11-dev<br>
 sudo apt-get install libglfw3-dev<br>
 sudo apt-get install libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev 
 
-**Odroid specific commands:**<br>
+### Odroid specific commands
 ./scripts/patch-realsense-ubuntu-odroid.sh./scripts/setup_udev_rules.sh<br>
 Odroid: ./scripts/patch-realsense-ubuntu-odroid-xu4-4.14.sh<br>
 sudo udevadm control --reload-rules && udevadm trigger<br>
@@ -65,11 +65,13 @@ sudo modprobe uvcvideo
 Following this https://github.com/buzzr6/librealsense/blob/QRCode/doc/installation.md<br>
 Disregard toolchain updates
 
-**OPENCV INSTRUCTIONS:**, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html<br>
+### OPENCV INSTRUCTIONS
+https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv<br>
+https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html<br>
 git clone https://github.com/opencv/opencv.git<br>
 mkdir build<br>
 cd build<br>
-Build: cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..<br>
+cmake -D CMAKE_BUILD_TYPE=Release -D CMAKE_INSTALL_PREFIX=/usr/local ..<br>
 make -j2<br>
 sudo make install<br>
 export OpenCV_DIR=~/opencv/build<br>
@@ -78,25 +80,22 @@ sudo make uninstall && make clean && make && sudo make install
 
 pip install opencv-python or sudo apt install python-opencv
 
-**PYTHON INSTRUCTIONS:**<br>
+### PYTHON INSTRUCTIONS
 https://github.com/buzzr6/librealsense/tree/master/wrappers/python<br>
 sudo apt install python-pip<br>
 sudo apt-get install python python-dev
 cmake ../ -DBUILD_PYTHON_BINDINGS=bool:true<br>
 make -j2<br>
-sudo make install
+sudo make install<br>
+sudo apt-get install libzbar0<br>
+pip install pyzbar<br>
+sudo pip install numpy
 
 Need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2<br>
 Update .bashrc with this line after build **export PYTHONPATH=$PYTHONPATH:/usr/local/lib**
 
 sudo apt-get update && sudo apt-get upgrade
 
-Okay that took forever lol<br>
-All that I was able to run the cmake command to build the python examples
-
 sudo pip install numpy
 
-### Now, the LibrealSense2 Build
-1. Following this https://github.com/buzzr6/librealsense/blob/QRCode/doc/installation.md
-2. sudo apt-get install libzbar0
-3. pip install pyzbar
+probably install ZBARSymbol or something too
