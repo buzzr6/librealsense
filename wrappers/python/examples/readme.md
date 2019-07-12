@@ -62,6 +62,9 @@ Odroid: ./scripts/patch-realsense-ubuntu-odroid-xu4-4.14.sh<br>
 sudo udevadm control --reload-rules && udevadm trigger<br>
 sudo modprobe uvcvideo
 
+Following this https://github.com/buzzr6/librealsense/blob/QRCode/doc/installation.md<br>
+Disregard toolchain updates
+
 **Downloading OpenCV from the opencv page**, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
 
 Complete OpenCv build in the opencv git folder before tyring to build the opencv examples in the librealsense git folder
@@ -72,7 +75,8 @@ https://github.com/buzzr6/librealsense/tree/master/wrappers/python<br>
 sudo apt install python-pip<br>
 sudo apt-get install python python-dev
 
-Need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2, then update PYTHONPATH to be where the pyrealsense is /usr/bin/local
+Need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2<br>
+Update .bashrc with this line after build **export PYTHONPATH=$PYTHONPATH:/usr/local/lib**
 
 sudo apt-get update && sudo apt-get upgrade
 
