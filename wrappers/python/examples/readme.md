@@ -40,8 +40,8 @@ To view the cronjob and edit it
 8. pip install pyrealsense2 (dont need to do it) need to build out in the librealsense/build/wrappers/python after running the generl cmake with the python flag, that builds the pyrealsense 2, then update PYTHONPATH to be where the pyrealsense is
 9. sudo apt-get update && sudo apt-get upgrade
 Okay that took forever lol
-10. Downloading OpenCV from the opencv page
-Download before downloading python stuff
+10. Downloading OpenCV from the opencv page, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
+* Download before downloading python stuff
 11. sudo apt install cmake
 12. sudo apt-get install pkg-config
 13. sudo apt-get install libusb-1.0-0-dev
