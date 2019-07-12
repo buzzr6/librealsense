@@ -36,6 +36,8 @@ Had to “unlock the front end” to use the sudo apt-get commands to download s
 greeter-session=lightdm-gtk-greeter
 autologin-user=odroid
 
+mouse issue: create /boot/cmdline.txt file and add in line usbhid.mousepoll=0
+
 sudo apt-get install git
 
 sudo apt-get install vim
