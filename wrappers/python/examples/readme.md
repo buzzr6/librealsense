@@ -57,8 +57,8 @@ sudo apt-get install libglfw3-dev<br>
 sudo apt-get install libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev 
 
 **Odroid specific commands:**<br>
-./scripts/setup_udev_rules.sh<br>
-Odroid: ./scripts/patch-realsense-ubuntu-odroid.sh<br>
+./scripts/patch-realsense-ubuntu-odroid.sh./scripts/setup_udev_rules.sh<br>
+Odroid: ./scripts/patch-realsense-ubuntu-odroid-xu4-4.14.sh<br>
 sudo udevadm control --reload-rules && udevadm trigger<br>
 sudo modprobe uvcvideo
 
