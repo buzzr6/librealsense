@@ -39,6 +39,8 @@ sudo vim /usr/share/lightdm/lightdm.conf.d/60-lightdm-gtk-greeter.conf<br>
 greeter-session=lightdm-gtk-greeter<br>
 autologin-user=odroid
 
+Remove keyring Accessories > Passwords and Keys > right Click on Login
+
 **Mouse issue:**</br>
 sudo vim /etc/modules
 add these lines
