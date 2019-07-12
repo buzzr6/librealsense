@@ -24,13 +24,14 @@ To view the cronjob and edit it
 3. Make appropriate edits and view documentation link if necessary
 4. To save and exit do "Crtl+X" then "y" then hit enter
 
-## Xubuntu 16.04 64-bit LibrealSense Downloads Doc:
+## Xubuntu 16.04 64-bit LibrealSense Downloads Doc (adjusted for odroid install):
 
-Had to “unlock the front end” to use the sudo apt-get commands to download stuff
+Had to “unlock the front end” to use the sudo apt-get commands to download stuff (on kernel 4.9)
 * sudo rm /var/cache/apt/archives/lock
 * sudo rm /var/lib/dpkg/lock
 * sudo rm /var/lib/apt/lists/lock
 
+sudo apt-get install git vim
 
 **Auto login:**<br>
 [SeatDefaults]<br>
@@ -43,17 +44,14 @@ add these lines
 -r usbhid <br>
 usbhid mousepoll=1
 
-sudo apt-get install git vim
-
 **Git Cloned QR Code repo:**<br>
 I now have librealsense repo, lets see how to install and build everything
 
 **Download before downloading python stuff:**<br>
 sudo apt install cmake<br>
-sudo apt-get install pkg-config<br>
-sudo apt-get install libusb-1.0-0-dev<br>
 sudo apt-get install libx11-dev<br>
-sudo apt-get install xorg-dev libglu1-mesa-dev<br>
+sudo apt-get install libglfw3-dev
+sudo apt-get install git libssl-dev libusb-1.0-0-dev pkg-config libgtk-3-dev 
 
 **Downloading OpenCV from the opencv page**, https://github.com/buzzr6/librealsense/tree/master/wrappers/opencv , https://docs.opencv.org/trunk/d7/d9f/tutorial_linux_install.html
 
